@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, jsonify,request
 from rag_app.services.llm_service import ask_llm
+import re
 
 chat_route = Blueprint("chat", __name__)
 
@@ -17,7 +18,7 @@ def ask():
     res = ask_llm(user_message)
 
     return jsonify({
-        "ok": True,
+        "status": "Success",
         "response": res
     })
 

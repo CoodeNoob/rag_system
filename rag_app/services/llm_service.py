@@ -17,6 +17,13 @@ def prompt_build(question):
         Question: 
         {question}
         မြန်မာဘာသာဖြင့်သာ ဖြေပါ။
+        RULES:
+        - Only Response to user questions
+        - Do not include thinking 
+        - DO NOT include <think> tags
+        - DO NOT include reasoning
+        - DO NOT include explanations about thinking
+        - ONLY return the final answer
     """
 
 
