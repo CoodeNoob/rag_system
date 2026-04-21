@@ -61,45 +61,52 @@
 
 <script>
   const chatForm = document.querySelector(".input-row");
-  const chat_body = document.getElementById("chat-body");
+  const chatBody = document.getElementById("chat-body");
+  const chatMessageInput = document.getElementById("chat_message");
+
+  function appendMessage(role, message) {
+    const article = document.createElement("article");
+    article.className = `message ${role}`;
+
+    const avatar = document.createElement("div");
+    avatar.className = "avatar";
+
+    const icon = document.createElement("i");
+    icon.className = role === "user" ? "fa-solid fa-user" : "fa-solid fa-robot";
+    avatar.appendChild(icon);
+
+    const bubble = document.createElement("div");
+    bubble.className = "bubble";
+    bubble.textContent = message;
+
+    article.appendChild(avatar);
+    article.appendChild(bubble);
+
+    chatBody.appendChild(article);
+    chatBody.scrollTop = chatBody.scrollHeight;
+  }
 
   chatForm.addEventListener("submit", async (e) => {
     e.preventDefault();
+    const message = chatMessageInput.value.trim();
 
-    chat_body.innerHTML = `
-        <article class="message user">
-        <div class="avatar">
-          <i class="fa-solid fa-user"></i>
-        </div>
-        <div class="bubble">
-          Summarize the uploaded knowledge base in a few lines.
-        </div>
-      </article>
-      `;
+    if (!message) {
+      return;
+    }
 
-    const message = document.getElementById("chat_message").value;
+    appendMessage("user", message);
+    chatMessageInput.value = "";
 
     const payload = {
       message: message
     };
 
     const result = await go_ask(payload);
-    if (result.status === "Success") {
-      console.log(result.response)
-
-      chat_body.innerHTML = `
-            <article class="message bot">
-              <div class="avatar">
-                <i class="fa-solid fa-robot"></i>
-              </div>
-              <div class="bubble">
-                ${result.response}
-              </div>
-            </article>
-      `;
-
+    if (result && result.status === "Success") {
+      appendMessage("bot", result.response);
+    } else {
+      appendMessage("bot", "Sorry, I couldn't get a response right now.");
     }
-
   });
 
 
@@ -118,10 +125,7 @@
         throw new Error("Request failed");
       }
 
-      const data = await res.json();
-
-
-      return data;
+      return await res.json();
 
     } catch (err) {
       console.error(err);
