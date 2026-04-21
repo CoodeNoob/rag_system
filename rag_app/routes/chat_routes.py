@@ -9,20 +9,15 @@ def index():
     return render_template("chat.html")
 
 
-@chat_route.route("/ask",methods=["POST"])
+@chat_route.route("/ask", methods=["POST"])
 def ask():
-
     request_payload = request.get_json()
-
     user_message = request_payload["message"]
 
     res = ask_llm(user_message)
 
-
-    print(f"THis is the response \n{res}")
-    
-
     return jsonify({
-        "message":"ok",
-        "ok":True
+        "ok": True,
+        "response": res
     })
+

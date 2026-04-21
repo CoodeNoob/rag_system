@@ -29,6 +29,12 @@ def payload_prepare(question):
 
 
 def ask_llm(question):
-    response = requests.post(AI_URL,json=payload_prepare(question))
-    return response.json()
+    response = requests.post(AI_URL, json=payload_prepare(question), timeout=30)
+    response.raise_for_status()
+
+    try:
+        return response.json()
+    except requests.exceptions.JSONDecodeError:
+        raise ValueError(f"LLM server did not return JSON. Status={response.status_code}, Body={response.text}")
+
 
