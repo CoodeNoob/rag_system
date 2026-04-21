@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RAG System Chat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+  <main class="chat-shell">
+    <header class="chat-header">
+      <div class="brand">
+        <div class="brand-icon">
+          <i class="fa-solid fa-robot"></i>
+        </div>
+        <div>
+          <h1>RAG System Assistant</h1>
+          <p>Ask questions, search context, and get grounded answers.</p>
+        </div>
+      </div>
+      <div class="status">
+        <span class="status-dot"></span>
+        <span>Online</span>
+      </div>
+    </header>
+
+
+    <!-- CHAT BODY  -->
+    <section class="chat-body">
+      <article class="message bot">
+        <div class="avatar">
+          <i class="fa-solid fa-robot"></i>
+        </div>
+        <div class="bubble">
+          Hello. I am your artificial assistant how can i help you?
+        </div>
+      </article>
+
+      <article class="message user">
+        <div class="avatar">
+          <i class="fa-solid fa-user"></i>
+        </div>
+        <div class="bubble">
+          Summarize the uploaded knowledge base in a few lines.
+        </div>
+      </article>
+    </section>
+
+    <footer class="chat-input">
+      <form class="input-row">
+        <button class="icon-btn" type="button" aria-label="Attach file">
+          <i class="fa-solid fa-paperclip"></i>
+        </button>
+        <input type="text" placeholder="Type your question here..." id="chat_message">
+        <button class="send-btn" type="submit" aria-label="Send message" id="ask_message">
+          <i class="fa-solid fa-paper-plane"></i>
+        </button>
+      </form>
+    </footer>
+  </main>
+</body>
+
+<script>
+  const chatForm = document.querySelector(".input-row");
+
+  chatForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const message = document.getElementById("chat_message").value;
+
+    const payload = {
+      message: message
+    };
+
+    const result = await go_ask(payload);
+    console.log(result);
+  });
+
+
+  async function go_ask(payload) {
+    try {
+      const res = await fetch("/ask", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      });
+
+      // check error
+      if (!res.ok) {
+        throw new Error("Request failed");
+      }
+
+      const data = await res.json(); // convert response
+      return data;
+
+    } catch (err) {
+      console.error(err);
+      return null;
+    }
+  }
+</script>
+
+</html>
