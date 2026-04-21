@@ -19,6 +19,6 @@ def ask():
 
     return jsonify({
         "status": "Success",
-        "response": res
+        "response": res['response']
     })
 

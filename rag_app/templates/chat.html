@@ -32,7 +32,7 @@
 
 
     <!-- CHAT BODY  -->
-    <section class="chat-body">
+    <section class="chat-body" id="chat-body">
       <article class="message bot">
         <div class="avatar">
           <i class="fa-solid fa-robot"></i>
@@ -42,14 +42,7 @@
         </div>
       </article>
 
-      <article class="message user">
-        <div class="avatar">
-          <i class="fa-solid fa-user"></i>
-        </div>
-        <div class="bubble">
-          Summarize the uploaded knowledge base in a few lines.
-        </div>
-      </article>
+
     </section>
 
     <footer class="chat-input">
@@ -68,9 +61,21 @@
 
 <script>
   const chatForm = document.querySelector(".input-row");
+  const chat_body = document.getElementById("chat-body");
 
   chatForm.addEventListener("submit", async (e) => {
     e.preventDefault();
+
+    chat_body.innerHTML = `
+        <article class="message user">
+        <div class="avatar">
+          <i class="fa-solid fa-user"></i>
+        </div>
+        <div class="bubble">
+          Summarize the uploaded knowledge base in a few lines.
+        </div>
+      </article>
+      `;
 
     const message = document.getElementById("chat_message").value;
 
@@ -79,7 +84,22 @@
     };
 
     const result = await go_ask(payload);
-    console.log(result);
+    if (result.status === "Success") {
+      console.log(result.response)
+
+      chat_body.innerHTML = `
+            <article class="message bot">
+              <div class="avatar">
+                <i class="fa-solid fa-robot"></i>
+              </div>
+              <div class="bubble">
+                ${result.response}
+              </div>
+            </article>
+      `;
+
+    }
+
   });
 
 
@@ -98,7 +118,9 @@
         throw new Error("Request failed");
       }
 
-      const data = await res.json(); // convert response
+      const data = await res.json();
+
+
       return data;
 
     } catch (err) {
