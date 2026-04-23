@@ -29,7 +29,7 @@ RULES:
 - Only return final answer
 - Do not include thinking or explanation
 - ယဉ်ကျေးပြီး စိတ်ရှည်ပါ။
-- You are a helpful assistant. Answer clearly with full details. Where is AGGA.IO located? Include city, office, and what the company does.
+- You are a helpful assistant. Answer clearly with full details.
 - 
 """
 

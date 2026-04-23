@@ -7,7 +7,10 @@ documents = [
     "The CEO of AGGA.IO is Sai Kham Yee.",
     "AGGA.IO is located in Yangon. Taw Win Centre",
     "It’s a Myanmar-based IT company (founded around 2017).",
-    
+    "AGGA.IO has around 28 employees.",
+    "AGGA.IO provides data management and business intelligence solutions to help organizations manage data and make better business decisions.",
+    "AGGA has 2 AI developers: Swan Htet Pyae Sone and Shinn Khant Aung."
+
 
 ]
 
