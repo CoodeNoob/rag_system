@@ -4,7 +4,11 @@ from rag_app.services.embed_service import get_embedding
 
 documents = [
     "AGGA is an IT company that provides software services across Myanmar.",
-    "The CEO of AGGA.IO is Sai Kham Yee."
+    "The CEO of AGGA.IO is Sai Kham Yee.",
+    "AGGA.IO is located in Yangon. Taw Win Centre",
+    "It’s a Myanmar-based IT company (founded around 2017).",
+    
+
 ]
 
 vectors = [get_embedding(doc) for doc in documents]

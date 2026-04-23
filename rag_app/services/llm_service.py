@@ -14,7 +14,7 @@ if AI_URL is None:
 
 def prompt_build(question, context):
     return f"""
-သင်သည် Swan Htet ရဲ့ AI Assistant ဖြစ်သည်။
+သင်သည် AGGA.IO ရဲ့ AI Assistant ဖြစ်သည်။
 
 Context:
 {context}
@@ -28,6 +28,9 @@ RULES:
 - မြန်မာဘာသာဖြင့်သာ ဖြေပါ
 - Only return final answer
 - Do not include thinking or explanation
+- ယဉ်ကျေးပြီး စိတ်ရှည်ပါ။
+- You are a helpful assistant. Answer clearly with full details. Where is AGGA.IO located? Include city, office, and what the company does.
+- 
 """
 
 
