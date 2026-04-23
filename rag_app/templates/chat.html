@@ -17,16 +17,12 @@
     <header class="chat-header">
       <div class="brand">
         <div class="brand-icon">
-          <i class="fa-solid fa-robot"></i>
+          <img src="{{ url_for('static', filename='images/agga_icon.png') }}" alt="AGGA Assistant icon">
         </div>
         <div>
-          <h1>RAG System Assistant</h1>
+          <h1>AGGA Assistant</h1>
           <p>Ask questions, search context, and get grounded answers.</p>
         </div>
-      </div>
-      <div class="status">
-        <span class="status-dot"></span>
-        <span>Online</span>
       </div>
     </header>
 
@@ -35,10 +31,10 @@
     <section class="chat-body" id="chat-body">
       <article class="message bot">
         <div class="avatar">
-          <i class="fa-solid fa-robot"></i>
+          <img src="{{ url_for('static', filename='images/agga_icon.png') }}" alt="AGGA Assistant icon">
         </div>
         <div class="bubble">
-          Hello. I am your artificial assistant how can i help you?
+          Hello, How can I help you?
         </div>
       </article>
 
@@ -63,6 +59,7 @@
   const chatForm = document.querySelector(".input-row");
   const chatBody = document.getElementById("chat-body");
   const chatMessageInput = document.getElementById("chat_message");
+  const assistantAvatarSrc = "{{ url_for('static', filename='images/agga_icon.png') }}";
 
   function appendMessage(role, message) {
     const article = document.createElement("article");
@@ -71,9 +68,16 @@
     const avatar = document.createElement("div");
     avatar.className = "avatar";
 
-    const icon = document.createElement("i");
-    icon.className = role === "user" ? "fa-solid fa-user" : "fa-solid fa-robot";
-    avatar.appendChild(icon);
+    if (role === "user") {
+      const icon = document.createElement("i");
+      icon.className = "fa-solid fa-user";
+      avatar.appendChild(icon);
+    } else {
+      const image = document.createElement("img");
+      image.src = assistantAvatarSrc;
+      image.alt = "AGGA Assistant icon";
+      avatar.appendChild(image);
+    }
 
     const bubble = document.createElement("div");
     bubble.className = "bubble";
