@@ -4,12 +4,15 @@ from rag_app.services.embed_service import get_embedding
 
 documents = [
     "AGGA is an IT company that provides software services across Myanmar.",
-    "The CEO of AGGA.IO is Sai Kham Yee.",
+    "The CEO of AGGA.IO is Mr. Sai Kham Yee.",
     "AGGA.IO is located in Yangon. Taw Win Centre",
     "It’s a Myanmar-based IT company (founded around 2017).",
     "AGGA.IO has around 28 employees.",
     "AGGA.IO provides data management and business intelligence solutions to help organizations manage data and make better business decisions.",
-    "AGGA has 2 AI developers: Swan Htet Pyae Sone and Shinn Khant Aung."
+    "AGGA has AI developers: Swan Htet Pyae Sone and Shinn Khant Aung.",
+
+
+
 
 
 ]
