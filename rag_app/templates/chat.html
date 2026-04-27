@@ -78,6 +78,8 @@
   const chatForm = document.querySelector(".input-row");
   const chatBody = document.getElementById("chat-body");
   const chatMessageInput = document.getElementById("chat_message");
+  const askButton = document.getElementById("ask_message");
+  const askButtonIcon = askButton?.querySelector("i");
   const uploadPanel = document.getElementById("upload-panel");
   const toggleUploadPanelButton = document.getElementById("toggle-upload-panel");
   const closeUploadPanelButton = document.getElementById("close-upload-panel");
@@ -85,10 +87,26 @@
   const fileName = document.getElementById("file-name");
   const uploadButton = document.getElementById("upload-btn");
   const assistantAvatarSrc = "{{ url_for('static', filename='images/agga_icon.png') }}";
+  let isAsking = false;
+  let activeAskToken = 0;
+  let activeThinkingEl = null;
+  let activeAskController = null;
 
   function setUploadPanelState(isOpen) {
     uploadPanel.classList.toggle("is-open", isOpen);
     toggleUploadPanelButton.setAttribute("aria-expanded", isOpen ? "true" : "false");
+  }
+
+  function setChatBusy(isBusy) {
+    chatMessageInput.disabled = isBusy;
+    toggleUploadPanelButton.disabled = isBusy;
+
+    if (askButton) {
+      askButton.setAttribute("aria-label", isBusy ? "Stop generating" : "Send message");
+    }
+    if (askButtonIcon) {
+      askButtonIcon.className = isBusy ? "fa-solid fa-stop" : "fa-solid fa-paper-plane";
+    }
   }
 
   function appendMessage(role, message) {
@@ -109,6 +127,8 @@
       avatar.appendChild(image);
     }
 
+  
+
     const bubble = document.createElement("div");
     bubble.className = "bubble";
     bubble.textContent = message;
@@ -118,6 +138,58 @@
 
     chatBody.appendChild(article);
     chatBody.scrollTop = chatBody.scrollHeight;
+  }
+
+  function appendThinking() {
+    const article = document.createElement("article");
+    article.className = "message bot";
+
+    const avatar = document.createElement("div");
+    avatar.className = "avatar";
+
+    const image = document.createElement("img");
+    image.src = assistantAvatarSrc;
+    image.alt = "AGGA Assistant icon";
+    avatar.appendChild(image);
+
+    const bubble = document.createElement("div");
+    bubble.className = "bubble";
+
+    const dots = document.createElement("div");
+    dots.className = "thinking-dots";
+    for (let i = 0; i < 3; i += 1) {
+      dots.appendChild(document.createElement("span"));
+    }
+
+    bubble.appendChild(dots);
+    article.appendChild(avatar);
+    article.appendChild(bubble);
+
+    chatBody.appendChild(article);
+    chatBody.scrollTop = chatBody.scrollHeight;
+
+    return article;
+  }
+
+  function stopCurrentAsk() {
+    if (!isAsking) {
+      return;
+    }
+
+    activeAskToken += 1;
+    isAsking = false;
+
+    if (activeAskController && !activeAskController.signal.aborted) {
+      activeAskController.abort();
+    }
+    activeAskController = null;
+
+    if (activeThinkingEl && activeThinkingEl.isConnected) {
+      activeThinkingEl.remove();
+    }
+    activeThinkingEl = null;
+
+    setChatBusy(false);
   }
 
   toggleUploadPanelButton.addEventListener("click", () => {
@@ -135,6 +207,11 @@
 
   uploadPanel.addEventListener("submit", async (e) => {
     e.preventDefault();
+
+    if (isAsking) {
+      appendMessage("bot", "Please stop or wait for the current response before uploading.");
+      return;
+    }
 
     if (!fileInput.files.length) {
       appendMessage("bot", "Please choose a file before uploading.");
@@ -167,6 +244,12 @@
 
   chatForm.addEventListener("submit", async (e) => {
     e.preventDefault();
+
+    if (isAsking) {
+      stopCurrentAsk();
+      return;
+    }
+
     const message = chatMessageInput.value.trim();
 
     if (!message) {
@@ -180,7 +263,33 @@
       message: message
     };
 
-    const result = await go_ask(payload);
+    isAsking = true;
+    const token = (activeAskToken += 1);
+    const controller = new AbortController();
+
+    activeAskController = controller;
+    activeThinkingEl = appendThinking();
+    setChatBusy(true);
+
+    let result = null;
+    try {
+      result = await go_ask(payload, controller.signal);
+    } finally {
+      if (token === activeAskToken) {
+        isAsking = false;
+        activeAskController = null;
+        setChatBusy(false);
+
+        if (activeThinkingEl && activeThinkingEl.isConnected) {
+          activeThinkingEl.remove();
+        }
+        activeThinkingEl = null;
+      }
+    }
+
+    if (controller.signal.aborted) {
+      return;
+    }
     if (result && result.status === "Success") {
       appendMessage("bot", result.response);
     } else {
@@ -189,14 +298,15 @@
   });
 
 
-  async function go_ask(payload) {
+  async function go_ask(payload, signal) {
     try {
       const res = await fetch("/ask", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
+        signal
       });
 
       // check error
@@ -207,6 +317,9 @@
       return await res.json();
 
     } catch (err) {
+      if (err && err.name === "AbortError") {
+        return null;
+      }
       console.error(err);
       return null;
     }
