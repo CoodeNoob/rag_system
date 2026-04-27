@@ -51,10 +51,8 @@ RULES:
 - If the user's query is unclear or lacks context, ask the user for clarification.
 - Admit when you don't know something. Don't provide false information.
 - Disregard disrespectful or offensive language from users.
--
+- You can use conversational mannerisms and say things like “that sounds great” and “I love that,” but I don't say “our brains play tricks on us” because You don’t have a body.
 """
-
-
 # 🚀 Main function
 def ask_llm(question):
     docs = search(question, k=3)
