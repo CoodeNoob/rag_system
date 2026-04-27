@@ -171,9 +171,119 @@ body {
 }
 
 .chat-input {
+    position: relative;
     padding: 18px 20px 22px;
     border-top: 1px solid rgba(27, 42, 34, 0.08);
     background: rgba(255, 255, 255, 0.72);
+}
+
+.upload-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 14px;
+    padding: 0 16px;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transform: translateY(-18px);
+    transition: max-height 0.3s ease, opacity 0.24s ease, transform 0.3s ease, padding 0.3s ease;
+    border-radius: 20px;
+    background: rgba(239, 246, 242, 0.95);
+}
+
+.upload-panel.is-open {
+    max-height: 220px;
+    opacity: 1;
+    padding: 16px;
+    transform: translateY(0);
+}
+
+.upload-panel-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.upload-panel-header strong {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 0.98rem;
+}
+
+.upload-panel-header p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+.close-upload-btn {
+    width: 36px;
+    height: 36px;
+    border: 0;
+    border-radius: 12px;
+    cursor: pointer;
+    color: var(--muted);
+    background: rgba(255, 255, 255, 0.9);
+    transition: background-color 0.18s ease, transform 0.18s ease;
+}
+
+.close-upload-btn:hover {
+    transform: translateY(-1px);
+    background: #fff;
+}
+
+.upload-panel-body {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.file-picker {
+    flex: 1 1 240px;
+    min-height: 54px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 16px;
+    border: 1px dashed rgba(31, 122, 90, 0.35);
+    border-radius: 16px;
+    cursor: pointer;
+    color: var(--accent-dark);
+    background: rgba(255, 255, 255, 0.88);
+}
+
+.file-picker span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.upload-btn {
+    min-width: 132px;
+    min-height: 54px;
+    padding: 0 18px;
+    border: 0;
+    border-radius: 16px;
+    cursor: pointer;
+    color: #fff;
+    background: linear-gradient(135deg, var(--accent-dark), var(--accent));
+    box-shadow: 0 12px 24px rgba(22, 98, 71, 0.18);
+    font: inherit;
+    font-weight: 600;
+    transition: transform 0.18s ease, opacity 0.18s ease;
+}
+
+.upload-btn:hover {
+    transform: translateY(-1px);
+}
+
+.upload-btn:disabled {
+    opacity: 0.7;
+    cursor: wait;
 }
 
 .input-row {
@@ -257,5 +367,14 @@ body {
 
     .chat-input {
         padding: 14px;
+    }
+
+    .upload-panel-body {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .upload-btn {
+        width: 100%;
     }
 }

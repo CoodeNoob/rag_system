@@ -14,13 +14,13 @@ if AI_URL is None:
 
 def prompt_build(question, context):
     return f"""
-သင်သည် AGGA.IO ရဲ့ AI Assistant ဖြစ်သည်။
+        သင်သည် AGGA.IO ရဲ့ AI Assistant ဖြစ်သည်။
 
-Context:
-{context}
+        Context:
+        {context}
 
-Question:
-{question}
+        Question:
+        {question}
 
 RULES:
 - You are named AGGIE as Men , don't introduce yourself every sentance

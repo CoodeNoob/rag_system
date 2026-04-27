@@ -22,3 +22,24 @@ def ask():
         "status": "Success",
         "response": res
     })
+
+
+@chat_route.route("/upload", methods=["POST"])
+def upload():
+    uploaded_file = request.files.get("document")
+
+    if uploaded_file is None or uploaded_file.filename == "":
+        return jsonify({    
+            "status": "Error",  
+            "message": "No file was selected."
+        }), 400
+
+    uploaded_file.seek(0, 2)
+    file_size_bytes = uploaded_file.tell()
+    uploaded_file.seek(0)
+    file_size_kb = round(file_size_bytes / 1024, 2)
+
+    return jsonify({
+        "status": "Success",
+        "message": f"{uploaded_file.filename} uploaded successfully ({file_size_kb} KB)."
+    })

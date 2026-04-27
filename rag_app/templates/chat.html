@@ -37,13 +37,32 @@
           Hello, How can I help you?
         </div>
       </article>
-
-
     </section>
 
     <footer class="chat-input">
+      <form class="upload-panel" id="upload-panel" enctype="multipart/form-data">
+        <div class="upload-panel-header">
+          <div>
+            <strong>Upload a file</strong>
+            <p>Select a document to send with the chat session.</p>
+          </div>
+          <button class="close-upload-btn" type="button" id="close-upload-panel" aria-label="Close upload panel">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div class="upload-panel-body">
+          <label class="file-picker" for="chat-file">
+            <i class="fa-solid fa-file-arrow-up"></i>
+            <span id="file-name">Choose a file</span>
+          </label>
+          <input type="file" id="chat-file" name="document" hidden>
+          <button class="upload-btn" type="submit" id="upload-btn">Upload file</button>
+        </div>
+      </form>
+
       <form class="input-row">
-        <button class="icon-btn" type="button" aria-label="Attach file">
+        <button class="icon-btn" type="button" aria-label="Attach file" id="toggle-upload-panel" aria-expanded="false">
           <i class="fa-solid fa-paperclip"></i>
         </button>
         <input type="text" placeholder="Type your question here..." id="chat_message">
@@ -59,7 +78,18 @@
   const chatForm = document.querySelector(".input-row");
   const chatBody = document.getElementById("chat-body");
   const chatMessageInput = document.getElementById("chat_message");
+  const uploadPanel = document.getElementById("upload-panel");
+  const toggleUploadPanelButton = document.getElementById("toggle-upload-panel");
+  const closeUploadPanelButton = document.getElementById("close-upload-panel");
+  const fileInput = document.getElementById("chat-file");
+  const fileName = document.getElementById("file-name");
+  const uploadButton = document.getElementById("upload-btn");
   const assistantAvatarSrc = "{{ url_for('static', filename='images/agga_icon.png') }}";
+
+  function setUploadPanelState(isOpen) {
+    uploadPanel.classList.toggle("is-open", isOpen);
+    toggleUploadPanelButton.setAttribute("aria-expanded", isOpen ? "true" : "false");
+  }
 
   function appendMessage(role, message) {
     const article = document.createElement("article");
@@ -89,6 +119,51 @@
     chatBody.appendChild(article);
     chatBody.scrollTop = chatBody.scrollHeight;
   }
+
+  toggleUploadPanelButton.addEventListener("click", () => {
+    const shouldOpen = !uploadPanel.classList.contains("is-open");
+    setUploadPanelState(shouldOpen);
+  });
+
+  closeUploadPanelButton.addEventListener("click", () => {
+    setUploadPanelState(false);
+  });
+
+  fileInput.addEventListener("change", () => {
+    fileName.textContent = fileInput.files.length ? fileInput.files[0].name : "Choose a file";
+  });
+
+  uploadPanel.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    if (!fileInput.files.length) {
+      appendMessage("bot", "Please choose a file before uploading.");
+      return;
+    }
+
+    const selectedFile = fileInput.files[0];
+    const formData = new FormData();
+    formData.append("document", selectedFile);
+
+    uploadButton.disabled = true;
+    uploadButton.textContent = "Uploading...";
+
+    const result = await uploadFile(formData);
+
+    uploadButton.disabled = false;
+    uploadButton.textContent = "Upload file";
+
+    if (result && result.status === "Success") {
+      appendMessage("user", `Uploaded file: ${selectedFile.name}`);
+      appendMessage("bot", result.message);
+      uploadPanel.reset();
+      fileName.textContent = "Choose a file";
+      setUploadPanelState(false);
+      return;
+    }
+
+    appendMessage("bot", "Sorry, the file upload failed.");
+  });
 
   chatForm.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -131,6 +206,24 @@
 
       return await res.json();
 
+    } catch (err) {
+      console.error(err);
+      return null;
+    }
+  }
+
+  async function uploadFile(formData) {
+    try {
+      const res = await fetch("/upload", {
+        method: "POST",
+        body: formData
+      });
+
+      if (!res.ok) {
+        throw new Error("Upload failed");
+      }
+
+      return await res.json();
     } catch (err) {
       console.error(err);
       return null;

@@ -42,3 +42,8 @@ def get_embedding(question):
 
 
 
+def file_data_embedding(file):
+    pass
+
+
+
