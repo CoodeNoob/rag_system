@@ -372,7 +372,7 @@ body {
     transform: translateY(-18px);
     transition: max-height 0.3s ease, opacity 0.24s ease, transform 0.3s ease, padding 0.3s ease;
     border-radius: 20px;
-    background: rgba(239, 246, 242, 0.95);
+    background: rgba(31, 99, 122, 0.08);
 }
 
 .upload-panel.is-open {
