@@ -1,14 +1,15 @@
 :root {
-    --bg-1: #f4efe6;
-    --bg-2: #dbe9e4;
+    --bg-1: #eef4ff;
+    --bg-2: #dbe8ff;
     --panel: rgba(255, 255, 255, 0.88);
     --panel-border: rgba(27, 42, 34, 0.08);
     --text: #1b2a22;
-    --muted: #66756e;
-    --accent: #1f7a5a;
-    --accent-dark: #166247;
-    --bubble-bot: #eef5f1;
-    --bubble-user: #1f7a5a;
+    --muted: #667175;
+    --accent-dark: #577cb0;
+    --accent: #8fb2e3;
+    --accent-rgb: 87 124 176;
+    --bubble-bot: #eef3fb;
+    --bubble-user: var(--accent-dark);
     --shadow: 0 24px 60px rgba(25, 48, 40, 0.16);
 }
 
@@ -27,7 +28,7 @@ body {
     overflow: hidden;
     background:
         radial-gradient(circle at top left, rgba(255, 255, 255, 0.9), transparent 30%),
-        radial-gradient(circle at bottom right, rgba(31, 122, 90, 0.18), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(0, 0, 0, 0.18), transparent 28%),
         linear-gradient(135deg, var(--bg-1), var(--bg-2));
 }
 
@@ -71,7 +72,7 @@ body {
     height: 40px;
     border: 0;
     border-radius: 14px;
-    background: rgba(31, 122, 90, 0.08);
+    background: rgba(var(--accent-rgb), 0.1);
     color: var(--accent-dark);
     cursor: pointer;
     display: grid;
@@ -81,7 +82,7 @@ body {
 
 .new-chat-btn:hover {
     transform: translateY(-1px);
-    background: rgba(31, 122, 90, 0.12);
+    background: rgba(var(--accent-rgb), 0.14);
 }
 
 .history-list {
@@ -96,7 +97,7 @@ body {
 
 .history-item {
     width: 100%;
-    border: 1px solid rgba(27, 42, 34, 0.08);
+    border: 1px solid rgba(27, 38, 42, 0.08);
     background: rgba(255, 255, 255, 0.6);
     border-radius: 18px;
     padding: 12px 12px;
@@ -114,8 +115,8 @@ body {
 }
 
 .history-item.is-active {
-    border-color: rgba(31, 122, 90, 0.22);
-    background: rgba(31, 122, 90, 0.08);
+    border-color: rgba(var(--accent-rgb), 0.28);
+    background: rgba(var(--accent-rgb), 0.1);
 }
 
 .history-title {
@@ -195,7 +196,7 @@ body {
     align-items: center;
     justify-content: space-between;
     padding: 22px 24px;
-    border-bottom: 1px solid rgba(27, 42, 34, 0.08);
+    border-bottom: 1px solid rgba(27, 38, 42, 0.08);
 }
 
 .brand {
@@ -238,7 +239,7 @@ body {
     gap: 8px;
     padding: 10px 14px;
     border-radius: 999px;
-    background: rgba(31, 122, 90, 0.08);
+    background: rgba(0, 0, 0, 0.08);
     color: var(--accent-dark);
     font-size: 0.9rem;
     font-weight: 600;
@@ -291,13 +292,13 @@ body {
 }
 
 .message.bot .avatar {
-    background: #dfece6;
+    background: rgba(var(--accent-rgb), 0.08);
     color: var(--accent-dark);
 }
 
 .message.user .avatar {
-    background: #d8e5ff;
-    color: #2855aa;
+    background: rgba(var(--accent-rgb), 0.18);
+    color: var(--accent-dark);
 }
 
 .bubble {
@@ -355,7 +356,7 @@ body {
 .chat-input {
     position: relative;
     padding: 18px 20px 22px;
-    border-top: 1px solid rgba(27, 42, 34, 0.08);
+    border-top: 1px solid rgba(27, 41, 42, 0.08);
     background: rgba(255, 255, 255, 0.72);
 }
 
@@ -430,7 +431,7 @@ body {
     align-items: center;
     gap: 10px;
     padding: 0 16px;
-    border: 1px dashed rgba(31, 122, 90, 0.35);
+    border: 1px dashed rgba(var(--accent-rgb), 0.35);
     border-radius: 16px;
     cursor: pointer;
     color: var(--accent-dark);
@@ -453,7 +454,7 @@ body {
     cursor: pointer;
     color: #fff;
     background: linear-gradient(135deg, var(--accent-dark), var(--accent));
-    box-shadow: 0 12px 24px rgba(22, 98, 71, 0.18);
+    box-shadow: 0 12px 24px rgba(22, 98, 95, 0.18);
     font: inherit;
     font-weight: 600;
     transition: transform 0.18s ease, opacity 0.18s ease;
@@ -473,7 +474,7 @@ body {
     align-items: center;
     gap: 12px;
     padding: 10px 12px;
-    border: 1px solid rgba(27, 42, 34, 0.12);
+    border: 1px solid rgba(27, 32, 42, 0.12);
     border-radius: 20px;
     background: #fff;
 }
@@ -509,16 +510,16 @@ body {
 }
 
 .input-row input::placeholder {
-    color: #97a39d;
+    color: #979ca3;
 }
 
 .send-btn {
     width: 48px;
     height: 48px;
     border-radius: 16px;
-    color: #fff;
-    background: linear-gradient(135deg, var(--accent), #3a9772);
-    box-shadow: 0 12px 24px rgba(31, 122, 90, 0.22);
+    color: #ffffff;
+    background: linear-gradient(135deg, var(--accent-dark), var(--accent));
+    box-shadow: 0 12px 24px rgba(var(--accent-rgb), 0.26);
     font-size: 1rem;
 }
 
