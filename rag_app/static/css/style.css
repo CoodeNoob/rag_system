@@ -115,8 +115,8 @@ body {
 }
 
 .history-item.is-active {
-    border-color: rgba(var(--accent-rgb), 0.28);
-    background: rgba(var(--accent-rgb), 0.1);
+    border-color: rgba(17, 88, 150, 0.22);
+    background: rgba(31, 99, 122, 0.08);
 }
 
 .history-title {
